@@ -1,0 +1,40 @@
+{
+  "name": "car-recognization",
+  "version": "1.0.0",
+  "description": "car-recognization",
+  "author": {
+    "name": "Teo Kupcinovac"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/javascript603/drawable-canvas.git"
+  },
+  "keywords": [
+    "react",
+    "reactjs",
+    "redux",
+    "redux-router",
+    "tachynos",
+    "redux-thunk",
+    "car-recognization",
+    "drawable-canvas"
+  ],
+  "dependencies": {
+    "history": "^4.7.2",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.9",
+    "react-scripts": "1.1.1",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "license": "MIT"
+}
