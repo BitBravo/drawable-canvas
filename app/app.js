@@ -1,11 +1,4 @@
-/**
- * app.js
- *
- * This is the entry file for the application, only setup and boilerplate
- * code.
- */
 
-// Needed for redux-saga es6 generator support
 import '@babel/polyfill';
 
 // Import all the third party stuff
@@ -50,11 +43,9 @@ const MOUNT_NODE = document.getElementById('app');
 const render = () => {
   ReactDOM.render(
     <Provider store={store}>
-      {/* <LanguageProvider messages={messages}> */}
       <ConnectedRouter history={history}>
         <App />
       </ConnectedRouter>
-      {/* </LanguageProvider> */}
     </Provider>,
     MOUNT_NODE
   );
