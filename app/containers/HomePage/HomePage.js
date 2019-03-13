@@ -6,6 +6,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router';
 import { Helmet } from 'react-helmet';
 
 import './style.scss';
@@ -14,9 +15,6 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
 
   componentDidMount() {
     const { currentuser, onSaveContents } = this.props;
-    if (currentuser) {
-      // go to login
-    }
   }
 
   render() {
@@ -24,18 +22,22 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
       loading, currentuser, onSaveContents,
     } = this.props;
     console.log(this.props)
-
-    return (
-      <article>
-        <Helmet>
-          <title>Login Page</title>
-          <meta name="description" content="Car recognization system" />
-        </Helmet>
-        <div className="home-page">
-          <h1>Home page</h1>
-        </div>
-      </article>
-    );
+    if (currentuser) {
+      return (<Redirect to="login" />);
+    } else {
+      return (
+        <article>
+          <Helmet>
+            <title>Login Page</title>
+            <meta name="description" content="Car recognization system" />
+          </Helmet>
+        
+          <div className="home-page">
+            <h1>Home page</h1>
+          </div>
+        </article>
+      );
+   }
   }
 }
 
