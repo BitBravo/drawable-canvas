@@ -1,16 +1,16 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import Login from '../index';
+import FeaturePage from '../index';
 
-describe('<Login />', () => {
+describe('<FeaturePage />', () => {
   it('should render its heading', () => {
-    const renderedComponent = shallow(<Login />);
-    expect(renderedComponent.contains(<h1>Login</h1>)).toBe(true);
+    const renderedComponent = shallow(<FeaturePage />);
+    expect(renderedComponent.contains(<h1>Features</h1>)).toBe(true);
   });
 
   it('should never re-render the component', () => {
-    const renderedComponent = shallow(<Login />);
+    const renderedComponent = shallow(<FeaturePage />);
     const inst = renderedComponent.instance();
     expect(inst.shouldComponentUpdate()).toBe(false);
   });

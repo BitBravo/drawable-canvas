@@ -4,7 +4,7 @@ import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { makeSetContents } from './selectors';
-import { makeSelectCurrentUser } from '../App/selectors';
+import { makeSetLoginUser } from '../Login/selectors';
 import { saveContents, getContents } from './actions';
 import reducer from './reducer';
 import saga from './saga';
@@ -16,7 +16,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = createStructuredSelector({
-  currentuser: makeSelectCurrentUser(),
+  loginUser: makeSetLoginUser(),
   contents: makeSetContents()
 });
 

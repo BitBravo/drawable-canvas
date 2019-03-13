@@ -14,15 +14,15 @@ import './style.scss';
 export default class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
   componentDidMount() {
-    const { currentuser, onSaveContents } = this.props;
+    const { loginUser, onSaveContents } = this.props;
   }
 
   render() {
     const {
-      loading, currentuser, onSaveContents,
+      loading, loginUser, onSaveContents,
     } = this.props;
     console.log(this.props)
-    if (currentuser) {
+    if (loginUser) {
       return (<Redirect to="login" />);
     } else {
       return (
@@ -43,6 +43,6 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
 
 HomePage.propTypes = {
   loading: PropTypes.bool,
-  currentuser: PropTypes.object,
+  loginUser: PropTypes.object,
   onSaveContents: PropTypes.func
 };
