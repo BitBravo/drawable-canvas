@@ -10,6 +10,7 @@ import { Redirect } from 'react-router';
 import { Helmet } from 'react-helmet';
 import Sidebar from 'components/Sidebar';
 import Navebar from 'components/Navebar';
+import MainContents from 'components/MainContents';
 
 import './style.scss';
 
@@ -56,7 +57,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
                 // toggleSidebar={this.toggleSidebar}
                 // sidebarOpened={this.state.sidebarOpened}
               />
-              {/* <Switch>{this.getRoutes(routes)}</Switch> */}
+              <MainContents />
               {/* {// we don't want the Footer to be rendered on map page
               this.props.location.pathname.indexOf("maps") !== -1 ? null : (
                 <Footer fluid />
