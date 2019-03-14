@@ -1,7 +1,13 @@
-.sidebar {
-  img {
-    width: 100%;
-    margin: 0 auto;
-    display: block;
-  }
+.simple-text {
+    .tim-icons {
+        padding-left: 10px;
+        font-size: 25px;
+        font-weight: 900;
+    }
+    span {
+        font-size: 20px;
+        font-weight: 900;
+        vertical-align: -webkit-baseline-middle;
+        padding-left: 12px;
+    }
 }

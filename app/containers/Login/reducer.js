@@ -34,7 +34,7 @@ function userReducer(state = initialState, action) {
     case LOGIN_SUCCESS:
       return state
         .set('loading', false)
-        .set('loginUser', action.user)
+        .set('loginUser', {...action.loginUser, authentication: true})
         .set('error', false);
     case LOGIN_ERROR:
       return state

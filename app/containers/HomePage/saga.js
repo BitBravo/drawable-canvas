@@ -36,7 +36,7 @@ export function* getContents() {
   const requestURL = `https:\\loalhost:3000`;
 
   try {
-    yield put(getContentsDone({contents: ''}));
+    yield put(getContentsDone({contents: 'get contents action request'}));
   } catch (err) {
     yield put(getContentsError(err));
   }
@@ -47,7 +47,7 @@ export function* saveContents() {
   const requestURL = `https:\\loalhost:3000`;
 
   try {
-    yield put(saveContentsDone({contents: {}}));
+    yield put(saveContentsDone({contents: {data:'save contenst data request'}}));
   } catch (err) {
     yield put(saveContentsError(err));
   }

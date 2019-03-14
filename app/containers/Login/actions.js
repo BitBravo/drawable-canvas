@@ -9,17 +9,17 @@ import {
  *
  * @return {object}    An action object with a type of GET_CONTENTS
  */
-export function userLogin(user) {
+export function userLogin(loginUser) {
   return {
     type: LOGIN_REQUEST,
-    user
+    loginUser
   };
 }
 
-export function loginDone(user) {
+export function loginDone(loginUser) {
   return {
     type: LOGIN_SUCCESS,
-    user
+    loginUser
   };
 }
 

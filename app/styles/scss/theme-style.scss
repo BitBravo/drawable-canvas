@@ -1,0 +1,100 @@
+
+/*
+ =========================================================
+ * Black Dashboard React v1.0.0 based on Black Dashboard - v1.0.0
+ =========================================================
+
+ * Product Page: https://www.creative-tim.com/product/theme
+ * Copyright 2018 Creative Tim (http://www.creative-tim.com)
+
+
+ =========================================================
+
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+ */
+
+ // Core
+
+@import "theme/custom/functions";
+@import "theme/bootstrap/functions";
+
+@import "theme/custom/variables";
+@import "theme/bootstrap/variables";
+
+@import "theme/custom/mixins";
+@import "theme/bootstrap/mixins";
+
+ // Bootstrap components
+
+@import "theme/bootstrap/root";
+@import "theme/bootstrap/reboot";
+@import "theme/bootstrap/type";
+@import "theme/bootstrap/images";
+@import "theme/bootstrap/code";
+@import "theme/bootstrap/grid";
+@import "theme/bootstrap/tables";
+@import "theme/bootstrap/forms";
+@import "theme/bootstrap/buttons";
+@import "theme/bootstrap/transitions";
+@import "theme/bootstrap/dropdown";
+@import "theme/bootstrap/button-group";
+@import "theme/bootstrap/input-group";
+@import "theme/bootstrap/custom-forms";
+@import "theme/bootstrap/nav";
+@import "theme/bootstrap/navbar";
+@import "theme/bootstrap/card";
+@import "theme/bootstrap/breadcrumb";
+@import "theme/bootstrap/pagination";
+@import "theme/bootstrap/badge";
+@import "theme/bootstrap/jumbotron";
+@import "theme/bootstrap/alert";
+@import "theme/bootstrap/progress";
+@import "theme/bootstrap/media";
+@import "theme/bootstrap/list-group";
+@import "theme/bootstrap/close";
+@import "theme/bootstrap/modal";
+@import "theme/bootstrap/tooltip";
+@import "theme/bootstrap/popover";
+@import "theme/bootstrap/carousel";
+@import "theme/bootstrap/utilities";
+@import "theme/bootstrap/print";
+
+ // Custom components
+
+ @import "theme/custom/alerts.scss";
+ @import "theme/custom/badges.scss";
+ @import "theme/custom/buttons.scss";
+ @import "theme/custom/dropdown.scss";
+ @import "theme/custom/footer.scss";
+ @import "theme/custom/forms.scss";
+ @import "theme/custom/images.scss";
+ @import "theme/custom/modal.scss";
+ @import "theme/custom/navbar.scss";
+ @import "theme/custom/type.scss";
+ @import "theme/custom/tables";
+ @import "theme/custom/checkboxes-radio";
+ @import "theme/custom/fixed-plugin";
+ @import "theme/custom/sidebar-and-main-panel.scss";
+ @import "theme/custom/misc.scss";
+ @import "theme/custom/rtl.scss";
+ @import "theme/custom/input-group.scss";
+
+
+ // Vendor / Plugins
+
+@import "theme/custom/vendor/plugin-perfect-scrollbar.scss";
+@import "theme/custom/vendor/plugin-react-notification-alert.scss";
+
+// light mode
+
+@import "theme/custom/white-content.scss";
+
+// Cards
+
+@import 'theme/custom/card';
+@import "theme/custom/cards/card-chart";
+@import "theme/custom/cards/card-map";
+@import "theme/custom/cards/card-user";
+@import "theme/custom/cards/card-task";
+@import "theme/custom/cards/card-plain";

@@ -22,6 +22,7 @@ import {
 const initialState = fromJS({
   loading: false,
   error: false,
+  authentication: false,
   currentuser: {},
 });
 
@@ -31,15 +32,18 @@ function appReducer(state = initialState, action) {
       return state
         .set('loading', true)
         .set('error', false)
-        .set('currentuse', false);
+        .set('authentication', false)
+        .set('currentuser', {});
     case GET_USER_SUCCESS:
       return state
         .set('loading', false)
         .set('error', false)
+        .set('authentication', action.authentication)
         .set('currentuser', action.user);
     case GET_USER_ERROR:
       return state
         .set('error', action.error)
+        .set('authentication', false)
         .set('loading', false);
     default:
       return state;

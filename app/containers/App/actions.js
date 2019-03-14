@@ -37,10 +37,11 @@ export function getUser() {
  *
  * @return {object}     
  */
-export function getUserDone(user) {
+export function getUserDone(user, authentication) {
   return {
     type: GET_USER_SUCCESS,
     user,
+    authentication,
   };
 }
 

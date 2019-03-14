@@ -3,20 +3,26 @@ import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+
+import { makeSelectCurrentUser, makeSelectAuthentication } from '../App/selectors';
+import { getUser } from '../App/actions';
+
 import { makeSetContents } from './selectors';
-import { makeSetLoginUser } from '../Login/selectors';
 import { saveContents, getContents } from './actions';
+
 import reducer from './reducer';
 import saga from './saga';
 import HomePage from './HomePage';
 
 const mapDispatchToProps = (dispatch) => ({
+  onGetCurrentUser: () => dispatch(getUser()),
   onSaveContents: (data) => dispatch(saveContents(data)),
   onGetContents: () => dispatch(getContents()),
 });
 
 const mapStateToProps = createStructuredSelector({
-  loginUser: makeSetLoginUser(),
+  currentuser: makeSelectCurrentUser(),
+  authentication: makeSelectAuthentication(),
   contents: makeSetContents()
 });
 
