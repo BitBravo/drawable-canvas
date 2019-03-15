@@ -10,7 +10,7 @@ import Line from './line';
 import Rectangle from './rectangle';
 import Circle from './circle';
 import Pan from './pan';
-import Tool from './tools';
+import {tools} from 'constants/tools'
 
 // const fabric = require('fabric').fabric;
 const fabric = window.fabric
@@ -30,13 +30,13 @@ class SketchField extends PureComponent {
   }
 
   _initTools = (fabricCanvas) => {
+
     this._tools = {};
-    this._tools[Tool.Select] = new Select(fabricCanvas);
-    this._tools[Tool.Pencil] = new Pencil(fabricCanvas);
-    this._tools[Tool.Line] = new Line(fabricCanvas);
-    this._tools[Tool.Rectangle] = new Rectangle(fabricCanvas);
-    this._tools[Tool.Circle] = new Circle(fabricCanvas);
-    this._tools[Tool.Pan] = new Pan(fabricCanvas);
+    this._tools[tools.select.id] = new Select(fabricCanvas);
+    this._tools[tools.pencil.id] = new Pencil(fabricCanvas);
+    this._tools[tools.line.id] = new Line(fabricCanvas);
+    this._tools[tools.rectangle.id] = new Rectangle(fabricCanvas);
+    this._tools[tools.circle.id] = new Circle(fabricCanvas);
   }
 
   /**
@@ -100,6 +100,7 @@ class SketchField extends PureComponent {
     obj.__version = 1;
     // record current object state as json and save as originalState
     let objState = obj.toJSON();
+    console.log(objState)
     obj.__originalState = objState;
     let state = JSON.stringify(objState);
     // object, previous state, current state
@@ -182,7 +183,7 @@ class SketchField extends PureComponent {
     // Update the final state to new-generated object
     // Ignore Path object since it would be created after mouseUp
     // Assumed the last object in canvas.getObjects() in the newest object
-    if (this.props.tool !== Tool.Pencil) {
+    if (this.props.tool !== tools.pencil.id) {
       const canvas = this._fc;
       const objects = canvas.getObjects();
       const newObj = objects[objects.length - 1];
@@ -524,17 +525,12 @@ class SketchField extends PureComponent {
       backgroundColor
     } = this.props;
 
-    let canvas = this._fc = new fabric.Canvas(this._canvas, {
-         preserveObjectStacking: false,
-         renderOnAddRemove: false,
-         skipTargetFind: true,
-         backgroundColor: 'green'
-    });
+    let canvas = this._fc = new fabric.Canvas(this._canvas);
 
     this._initTools(canvas);
 
     // set initial backgroundColor
-    this._backgroundColor(backgroundColor)
+    this._backgroundColor('cornsilk')
 
     let selectedTool = this._tools[tool];
     selectedTool.configureCanvas(this.props);
@@ -577,8 +573,8 @@ class SketchField extends PureComponent {
       this._resize()
     }
 
-    if (this.props.tool !== prevProps.tool) {
-      this._selectedTool = this._tools[this.props.tool] || this._tools[Tool.Pencil]
+    if (this.props.tool !== prevProps.tool|!tools.remove.id) {
+      this._selectedTool = this._tools[this.props.tool] || this._tools[tools.pencil.id]
     }
 
     //Bring the cursor back to default if it is changed by a tool
@@ -595,6 +591,7 @@ class SketchField extends PureComponent {
   };
 
   render = () => {
+    console.log(this.props)
     let {
       className,
       style,
@@ -611,11 +608,7 @@ class SketchField extends PureComponent {
         className={className}
         ref={(c) => this._container = c}
         style={canvasDivStyle}>
-        <canvas
-          id={uuid4()}
-          ref={(c) => this._canvas = c}>
-          Sorry, Canvas HTML5 element is not supported by your browser
-          :(
+        <canvas id={uuid4()} ref={(c) => this._canvas = c}>
         </canvas>
       </div>
     )
@@ -623,13 +616,13 @@ class SketchField extends PureComponent {
 }
 
 SketchField.defaultProps = {
-  lineColor: 'green',
-  lineWidth: 3,
-  fillColor: '#fdfdfd',
+  lineColor: 'black',
+  lineWidth: 2,
+  fillColor: 'transparent',
   backgroundColor: 'transparent',
   opacity: 1.0,
   undoSteps: 25,
-  tool: Tool.Pencil,
+  tool: tools.pencil.id,
   widthCorrection: 2,
   heightCorrection: 0,
   forceValue: false

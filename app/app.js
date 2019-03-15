@@ -16,6 +16,8 @@ import App from 'containers/App';
 // Load the favicon
 /* eslint-disable import/no-webpack-loader-syntax */
 import '!file-loader?name=[name].[ext]!./images/favicon.ico';
+import 'font-awesome/css/font-awesome.min.css';
+
 /* eslint-enable import/no-webpack-loader-syntax */
 
 // Import CSS reset and Global Styles

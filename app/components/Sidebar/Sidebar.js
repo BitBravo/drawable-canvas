@@ -4,6 +4,7 @@ import { PropTypes } from "prop-types";
 import { Nav } from "reactstrap";
 import {tools} from 'constants/tools'
 import mouse from 'images/mouse.png'
+import FontAwesome from 'react-fontawesome';
 
 import './style.scss';
 
@@ -54,23 +55,23 @@ class Sidebar extends React.Component { // eslint-disable-line react/prefer-stat
       <div className="sidebar" data={'blue'}>
         <div className="sidebar-wrapper" ref="sidebar">
             <div className="logo">
-              <LogoText />
+                <LogoText />
             </div>
           <Nav>
             {
-              tools.map((item, key) => (
+              Object.keys(tools).map((itemkey, key) => (
                   <li 
-                    className={ contents.activeItem===item.id? 'active':'' }
+                    className={ contents.activeItem===tools[itemkey].id? 'active':'' }
                     key={key}
                   >
                     <a
                       className="nav-link"
-                      onClick={(e) => this.props.onUpdateTool(item.id)}
+                      onClick={(e) => this.props.onUpdateTool(tools[itemkey].id)}
                     >
                       {/* <i className={item.img} /> */}
                       <p>
-                      <span><img src={item.img} /></span>                    
-                      {item.name}</p>
+                      <span><img src={tools[itemkey].img} /></span>                    
+                      {tools[itemkey].name}</p>
                     </a>
                   </li>
                 )

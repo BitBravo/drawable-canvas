@@ -9,6 +9,7 @@ const fabric = window.fabric
 class Rectangle extends FabricCanvasTool {
 
   configureCanvas(props) {
+    console.log(props)
     let canvas = this._canvas;
     canvas.isDrawingMode = canvas.selection = false;
     canvas.forEachObject((o) => o.selectable = o.evented = false);

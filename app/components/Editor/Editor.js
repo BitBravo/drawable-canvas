@@ -30,7 +30,6 @@ class Editor extends React.Component { // eslint-disable-line react/prefer-state
       stretchedY: false,
       originX: 'left',
       originY: 'top',
-      imageUrl: 'https://files.gamebanana.com/img/ico/sprays/4ea2f4dad8d6f.png',
       expandTools: false,
       expandControls: false,
       expandColors: false,
@@ -43,23 +42,13 @@ class Editor extends React.Component { // eslint-disable-line react/prefer-state
   }
 
    render() {
+    const { activeItem } = this.props.contents;
+
     return (
       <SketchField
         name="sketch"
         className="canvas-area"
         ref={c => (this._sketch = c)}
-        // lineColor={this.state.lineColor}
-        // lineWidth={this.state.lineWidth}
-        // fillColor={
-        //   this.state.fillWithColor
-        //     ? this.state.fillColor
-        //     : 'transparent'
-        // }
-        // backgroundColor={
-        //   this.state.fillWithBackgroundColor
-        //     ? this.state.backgroundColor
-        //     : 'transparent'
-        // }
         width={
           this.state.controlledSize ? this.state.sketchWidth : null
         }
@@ -68,9 +57,8 @@ class Editor extends React.Component { // eslint-disable-line react/prefer-state
         }
         // defaultValue={dataJson}
         // value={controlledValue}
-        // forceValue
         // onChange={this._onSketchChange}
-        tool={this.state.tool}
+        tool={activeItem}
       />
     )
   }

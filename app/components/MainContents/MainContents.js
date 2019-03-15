@@ -37,7 +37,9 @@ class MainContents extends React.Component {
                 </CardHeader>
                 <CardBody>
                   <div style={{height:"500px", backgroundColor:'#27293d'}}>
-                    <Editor />
+                    <Editor 
+                      contents={this.props.contents}
+                    />
                   </div>
                 </CardBody>
               </Card>

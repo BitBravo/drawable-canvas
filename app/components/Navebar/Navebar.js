@@ -22,7 +22,6 @@ class Navebar extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     const { authentication, user } = this.props;
     return (
       <>

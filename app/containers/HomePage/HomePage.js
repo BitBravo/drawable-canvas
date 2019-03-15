@@ -26,7 +26,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
   }
 
   render() {
-    const { authentication, currentuser, onLogout } = this.props;
+    const { authentication, currentuser, onLogout, contents } = this.props;
 
     if (!authentication) {
       return (<Redirect to="login" />);
@@ -53,7 +53,9 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
                 user={currentuser}
                 logout={onLogout}
               />
-              <MainContents />
+              <MainContents 
+                contents={contents}
+              />
             </div>
           </div>
     
@@ -64,6 +66,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
 }
 
 HomePage.propTypes = {
+  contents: PropTypes.object,
   loading: PropTypes.bool,
   loginUserinfo: PropTypes.object,
   onSaveContents: PropTypes.func,
