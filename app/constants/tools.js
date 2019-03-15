@@ -1,22 +1,17 @@
 export const tools = [
     {
-        path: "/mouse",
-        name: "Mouse",
-        icon: "tim-icons icon-chart-pie-36",
+        id: "select",
+        name: "Select",
+        img: require('images/mouse.png'),
       },
       {
-        path: "/point",
-        name: "Point",
-        icon: "tim-icons icon-atom",
-      },
-      {
-        path: "/line",
+        id: "line",
         name: "Line",
-        icon: "tim-icons icon-pin",
+        img: require('images/line.png'),
       },
       {
-        path: "/shape",
-        name: "Shape",
-        icon: "tim-icons icon-bell-55",
+        id: "rect",
+        name: "Rectangular",
+        img: require('images/rect.png'),
       }
   ];

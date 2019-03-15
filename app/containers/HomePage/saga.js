@@ -8,7 +8,7 @@ import { GET_USER_REQUEST } from 'containers/App/constants';
 import { getUserDone, getUserError } from 'containers/App/actions';
 
 import { 
-  GET_CONTENTS_REQUEST, SAVE_CONTENTS_REQUEST,
+  GET_CONTENTS_REQUEST, SAVE_CONTENTS_REQUEST, SET_CONTENTS_DATA,
 } from 'containers/HomePage/constants';
 
 import { 
@@ -63,4 +63,5 @@ export default function* contentsData() {
   yield takeLatest(GET_USER_REQUEST, getUser);
   yield takeLatest(GET_CONTENTS_REQUEST, getContents);
   yield takeLatest(SAVE_CONTENTS_REQUEST, saveContents);
+  // yield takeLatest(SET_CONTENTS_DATA, setContents);
 }

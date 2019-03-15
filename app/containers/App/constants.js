@@ -12,4 +12,5 @@
 export const GET_USER_REQUEST = 'App/GET_USER_REQUEST';
 export const GET_USER_SUCCESS = 'App/GET_USER_SUCCESS';
 export const GET_USER_ERROR = 'App/GET_USER_ERROR';
+export const LOG_OUT = 'App/LOG_OUT';
 export const DEFAULT_LOCALE = 'en';

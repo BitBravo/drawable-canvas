@@ -18,13 +18,17 @@ import {
   SAVE_CONTENTS_REQUEST,
   SAVE_CONTENTS_SUCCESS,
   SAVE_CONTENTS_ERROR,
+  SET_CONTENTS_DATA,
 } from './constants';
 
 // The initial state of the App
 const initialState = fromJS({
   loading: true,
   error: false,
-  contents: {}
+  contents: {
+    activeItem: 'select',
+    itemData: {}
+  }
 });
 
 function homeReducer(state = initialState, action) {
@@ -55,6 +59,12 @@ function homeReducer(state = initialState, action) {
       return state
         .set('loading', false)
         .set('error', true);
+    case SET_CONTENTS_DATA: 
+      return state
+        .set('loading', false)
+        .setIn(['contents', 'activeItem'], action.activeItem)
+        .setIn(['contents', 'itemData'], action.itemData)
+        .set('error', false);
     default:
       return state;
   }

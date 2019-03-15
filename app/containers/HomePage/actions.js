@@ -6,6 +6,7 @@ import {
   SAVE_CONTENTS_REQUEST,
   SAVE_CONTENTS_SUCCESS,
   SAVE_CONTENTS_ERROR,
+  SET_CONTENTS_DATA,
 } from './constants';
 
 /**
@@ -57,5 +58,13 @@ export function getContentsError(error) {
   return {
     type: GET_CONTENTS_ERROR,
     error
+  };
+}
+
+export function setContents(activeItem, itemData) {
+  return {
+    type: SET_CONTENTS_DATA,
+    activeItem,
+    itemData
   };
 }

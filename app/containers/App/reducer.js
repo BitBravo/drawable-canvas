@@ -16,6 +16,7 @@ import {
   GET_USER_REQUEST,
   GET_USER_SUCCESS,
   GET_USER_ERROR,
+  LOG_OUT
 } from './constants';
 
 // The initial state of the App
@@ -44,6 +45,12 @@ function appReducer(state = initialState, action) {
       return state
         .set('error', action.error)
         .set('authentication', false)
+        .set('loading', false);
+    case LOG_OUT:
+      return state
+        .set('error', action.error)
+        .set('authentication', false)
+        .set('currentuser', false)
         .set('loading', false);
     default:
       return state;

@@ -5,10 +5,10 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 
 import { makeSelectCurrentUser, makeSelectAuthentication } from '../App/selectors';
-import { getUser } from '../App/actions';
+import { getUser, logOut } from '../App/actions';
 
-import { makeSetContents } from './selectors';
-import { saveContents, getContents } from './actions';
+import { makeSetContents, makeSetLoading } from './selectors';
+import { saveContents, getContents, setContents } from './actions';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -18,12 +18,15 @@ const mapDispatchToProps = (dispatch) => ({
   onGetCurrentUser: () => dispatch(getUser()),
   onSaveContents: (data) => dispatch(saveContents(data)),
   onGetContents: () => dispatch(getContents()),
+  onSetContents: (activeItem, itemData) => dispatch(setContents(activeItem, itemData)),
+  onLogout: () => dispatch(logOut()),
 });
 
 const mapStateToProps = createStructuredSelector({
   currentuser: makeSelectCurrentUser(),
   authentication: makeSelectAuthentication(),
-  contents: makeSetContents()
+  contents: makeSetContents(),
+  loading: makeSetLoading()
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

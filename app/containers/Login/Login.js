@@ -38,7 +38,7 @@ export default class Login extends React.Component {
   render() {
     console.log(this.props)
 
-    if (this.props.loginUser.authentication) {
+    if (this.props.loginUser.authentication && this.props.currentuser) {
       return <Redirect to='/' />
     } else {
       return (

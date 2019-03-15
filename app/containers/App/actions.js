@@ -19,6 +19,7 @@ import {
   GET_USER_REQUEST,
   GET_USER_SUCCESS,
   GET_USER_ERROR,
+  LOG_OUT
 } from './constants';
 
 /**
@@ -58,3 +59,10 @@ export function getUserError(error) {
     error,
   };
 }
+
+export function logOut() {
+  return {
+    type: LOG_OUT,
+  };
+}
+

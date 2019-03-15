@@ -3,6 +3,7 @@ import { NavLink, Link } from "react-router-dom";
 import { PropTypes } from "prop-types";
 import { Nav } from "reactstrap";
 import {tools} from 'constants/tools'
+import mouse from 'images/mouse.png'
 
 import './style.scss';
 
@@ -28,55 +29,53 @@ const LogoText = (text) => (
 class Sidebar extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
-    this.activeRoute.bind(this);
+    this.state = {
+      activedItem: null
+    }
+    this.activeTool.bind(this);
   }
   // verifies if routeName is the one active (in browser input)
-  activeRoute(routeName) {
-    // return this.props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
+  activeTool(routeName) {
+    
   }
 
   componentWillUnmount() {
-    if (navigator.platform.indexOf("Win") > -1) {
-      ps.destroy();
-    }
+    
   }
+
   linkOnClick = () => {
     document.documentElement.classList.remove("nav-open");
   };
 
   render() {
-    const { bgColor, routes, rtlActive, logo } = this.props;
+    const { contents } = this.props;
    
     return (
       <div className="sidebar" data={'blue'}>
         <div className="sidebar-wrapper" ref="sidebar">
             <div className="logo">
-              {/* {logoImg} */}
               <LogoText />
             </div>
           <Nav>
-            {tools.map((prop, key) => {
-              if (prop.redirect) return null;
-              return (
-                <li
-                  className={
-                    key===1? 'active':''  +
-                    (prop.pro ? " active-pro" : "")
-                  }
-                  key={key}
-                >
-                  <NavLink
-                    to={'/'}
-                    className="nav-link"
-                    activeClassName="active"
-                    onClick={this.props.toggleSidebar}
+            {
+              tools.map((item, key) => (
+                  <li 
+                    className={ contents.activeItem===item.id? 'active':'' }
+                    key={key}
                   >
-                    <i className={prop.icon} />
-                    <p>{prop.name}</p>
-                  </NavLink>
-                </li>
-              );
-            })}
+                    <a
+                      className="nav-link"
+                      onClick={(e) => this.props.onUpdateTool(item.id)}
+                    >
+                      {/* <i className={item.img} /> */}
+                      <p>
+                      <span><img src={item.img} /></span>                    
+                      {item.name}</p>
+                    </a>
+                  </li>
+                )
+              )
+            }
           </Nav>
         </div>
       </div>

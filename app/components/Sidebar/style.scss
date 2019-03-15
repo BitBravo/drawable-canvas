@@ -1,13 +1,46 @@
-.simple-text {
-    .tim-icons {
-        padding-left: 10px;
-        font-size: 25px;
-        font-weight: 900;
+
+
+.sidebar {
+    .simple-text {
+        .tim-icons {
+            padding-left: 10px;
+            font-size: 25px;
+            font-weight: 900;
+        }
+        span {
+            font-size: 20px;
+            font-weight: 900;
+            vertical-align: -webkit-baseline-middle;
+            padding-left: 12px;
+            img {
+                height: 25px;
+                width: 30px;
+                max-width: 100%;
+                border-radius: 0.2857rem;
+            }
+        }
     }
-    span {
-        font-size: 20px;
-        font-weight: 900;
-        vertical-align: -webkit-baseline-middle;
-        padding-left: 12px;
+    .active {
+        .nav-link {
+            p {
+                color: burlywood;
+                font-weight: 900;
+            }
+        }
+    }
+    .nav-link {
+        p{
+            font-size: 10px;
+            span {
+                padding-right: 20px;
+                vertical-align: middle;
+                img {
+                    max-width: 100%;
+                    border-radius: 0.2857rem;
+                    width: 25px;
+                    height: 25px;
+                }
+            }
+        }
     }
 }

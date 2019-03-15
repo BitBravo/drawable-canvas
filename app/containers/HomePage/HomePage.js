@@ -20,12 +20,15 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
     const { loginUser, onSaveContents } = this.props;
   }
 
-  render() {
-    const {
-      loading, loginUserinfo, onSaveContents, authentication,
-    } = this.props;
+  updateTool = (id) => {
+    console.log(`${id} item activated`);
+    this.props.onSetContents(id, {});
+  }
 
-    if (authentication) {
+  render() {
+    const { authentication, currentuser, onLogout } = this.props;
+
+    if (!authentication) {
       return (<Redirect to="login" />);
     } else {
       return (
@@ -37,31 +40,20 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
         
           <div className="wrapper">
             <Sidebar
-              // {...this.props}
-              // routes={routes}
-              // bgColor={this.state.backgroundColor}
-              logo={{
-                outterLink: "https://www.creative-tim.com/",
-                text: "Creative Tim",
-                imgSrc: 'logo'
-              }}
-              // toggleSidebar={this.toggleSidebar}
+              {...this.props}
+              onUpdateTool={this.updateTool}
             />
+
             <div
               className="main-panel"
               ref="mainPanel"
-              // data={this.state.backgroundColor}
             >
-              <Navebar
-                // brandText={this.getBrandText(this.props.location.pathname)}
-                // toggleSidebar={this.toggleSidebar}
-                // sidebarOpened={this.state.sidebarOpened}
+              <Navebar 
+                authentication={authentication}
+                user={currentuser}
+                logout={onLogout}
               />
               <MainContents />
-              {/* {// we don't want the Footer to be rendered on map page
-              this.props.location.pathname.indexOf("maps") !== -1 ? null : (
-                <Footer fluid />
-              )} */}
             </div>
           </div>
     
@@ -74,5 +66,8 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
 HomePage.propTypes = {
   loading: PropTypes.bool,
   loginUserinfo: PropTypes.object,
-  onSaveContents: PropTypes.func
+  onSaveContents: PropTypes.func,
+  onGetContents: PropTypes.func,
+  onSetContents: PropTypes.func,
+  onLogout: PropTypes.func,
 };
