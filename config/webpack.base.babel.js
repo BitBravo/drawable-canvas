@@ -18,10 +18,13 @@ module.exports = (options) => ({
     },
     options.output
   ), // Merge with env dependent settings
+  resolve: {
+    extensions: ['', '.js', '.jsx']
+  },
   module: {
     rules: [
       {
-        test: /\.js$/, // Transform all .js files required somewhere with Babel
+        test: /\.jsx?$/, // Transform all .js files required somewhere with Babel
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',

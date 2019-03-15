@@ -14,6 +14,8 @@ import {
   Row,
   Col
 } from "reactstrap";
+import Editor from 'components/Editor';
+
 
 import './style.scss'
 
@@ -35,6 +37,7 @@ class MainContents extends React.Component {
                 </CardHeader>
                 <CardBody>
                   <div style={{height:"500px", backgroundColor:'#27293d'}}>
+                    <Editor />
                   </div>
                 </CardBody>
               </Card>
