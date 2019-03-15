@@ -34,7 +34,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
       return (
         <article>
           <Helmet>
-            <title>Login Page</title>
+            <title>HomePage</title>
             <meta name="description" content="Car recognization system" />
           </Helmet>
         

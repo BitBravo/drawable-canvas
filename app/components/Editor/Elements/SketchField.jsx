@@ -155,7 +155,11 @@ class SketchField extends PureComponent {
    * Action when the mouse button is pressed down
    */
   _onMouseDown = (e) => {
-    this._selectedTool.doMouseDown(e);
+    if (this.props.tool !== tools.remove.id) {
+      this._selectedTool.doMouseDown(e);
+    } else {
+      this.removeSelected();
+    }
   };
 
   /**
@@ -415,6 +419,7 @@ class SketchField extends PureComponent {
    * Remove selected object from the canvas
    */
   removeSelected = () => {
+    console.log('delete action')
     let canvas = this._fc;
     let activeObj = canvas.getActiveObject();
     if (activeObj) {
@@ -433,7 +438,7 @@ class SketchField extends PureComponent {
         canvas.remove(obj);
       });
       canvas.discardActiveObject();
-      canvas.requestRenderAll();
+      canvas.renderAll();
     }
   };
 
@@ -573,9 +578,14 @@ class SketchField extends PureComponent {
       this._resize()
     }
 
-    if (this.props.tool !== prevProps.tool|!tools.remove.id) {
-      this._selectedTool = this._tools[this.props.tool] || this._tools[tools.pencil.id]
-    }
+    if (this.props.tool !== prevProps.tool) {
+      if (this.props.tool !== tools.remove.id) {
+        this._selectedTool = this._tools[this.props.tool] || this._tools[tools.pencil.id]
+      } else {
+        this._selectedTool = this._tools[tools.select.id];
+        // return true;
+      }
+    } 
 
     //Bring the cursor back to default if it is changed by a tool
     this._fc.defaultCursor = 'default';
