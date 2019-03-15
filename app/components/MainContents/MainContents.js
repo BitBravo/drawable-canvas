@@ -1,6 +1,4 @@
 import React from "react";
-
-// reactstrap components
 import {
   ButtonGroup,
   Button,
@@ -17,6 +15,8 @@ import {
   Col
 } from "reactstrap";
 
+import './style.scss'
+
 class MainContents extends React.Component {
   render() {
     return (
@@ -28,8 +28,8 @@ class MainContents extends React.Component {
                 <CardHeader>
                   <Row>
                     <Col className="text-left" sm="6">
-                      <h5 className="card-category">Total Shipments</h5>
-                      <CardTitle tag="h2">Performance</CardTitle>
+                      <h5 className="card-category">Car Detection Map</h5>
+                      <CardTitle tag="h2">Detection View</CardTitle>
                     </Col>
                   </Row>
                 </CardHeader>
@@ -44,11 +44,11 @@ class MainContents extends React.Component {
                 <CardHeader>
                   <Row>
                     <Col className="text-left" sm="6">
-                      <CardTitle tag="h2">Preview</CardTitle>
+                      <CardTitle tag="h2">Result</CardTitle>
                     </Col>
                     <Col sm="6">
                       <ButtonGroup
-                        className="btn-group-toggle float-right"
+                        className="btn-group-toggle float-right preview-action-bar"
                         data-toggle="buttons"
                       >
                         <Button
@@ -59,18 +59,19 @@ class MainContents extends React.Component {
                           size="sm"
                         >
                           <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                            Accounts
+                            Save
                           </span>
                         </Button>
                   
                         <Button
                           color="info"
-                          id="2"
+                          className={"btn-simple"}
+                          id="1"
                           size="sm"
                           tag="label"
                         >
                           <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                            Sessions
+                            Download
                           </span>
                         </Button>
                       </ButtonGroup>
@@ -86,23 +87,23 @@ class MainContents extends React.Component {
           </Row>
           <Row>
             <Col md="12">
-              <Card className="card-chart">
+              <Card className="card-chart main-control-board">
                 <CardBody>
                   <Row>
                     <Col className="pr-md-1" md="4">
                       <FormGroup>
-                        <label>City</label>
+                        <label>Incremental ID: </label>
                         <Input
-                          defaultValue="Mike"
-                          placeholder="City"
+                          defaultValue="0"
+                          placeholder="0"
                           type="text"
                         />
                       </FormGroup>
                       <FormGroup>
-                        <label>City</label>
+                        <label>Coordinate:</label>
                         <Input
-                          defaultValue="Mike"
-                          placeholder="City"
+                          defaultValue="X => 0, Y=> 0"
+                          placeholder="X => 0, Y=> 0"
                           type="text"
                         />
                       </FormGroup>
@@ -120,7 +121,7 @@ class MainContents extends React.Component {
                       </FormGroup>
                       <FormGroup>
                         <Button className="btn-fill" color="primary" type="submit">
-                          Decrease
+                          Delete
                         </Button>
                       </FormGroup>
                     </Col>

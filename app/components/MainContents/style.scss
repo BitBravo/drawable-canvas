@@ -1,8 +1,21 @@
-.form-group {
-  margin-bottom: 10px;
-  position: relative;
-  margin-left: 49px;
-  .codignate-control {
-    text-align: center;
+.content {
+  .preview-action-bar {
+    .btn-simple {
+      width: 90px;
+    }
+  }
+
+  .main-control-board {
+    .form-group {
+      margin-bottom: 10px;
+      position: relative;
+      margin-left: 49px;
+      .codignate-control {
+        text-align: center;
+      }
+    }
+    button {
+      width: 130px;
+    }
   }
 }
