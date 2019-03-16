@@ -9,7 +9,6 @@ import Pencil from './pencil';
 import Line from './line';
 import Rectangle from './rectangle';
 import Circle from './circle';
-import Pan from './pan';
 import {tools} from 'constants/tools'
 
 // const fabric = require('fabric').fabric;
@@ -25,12 +24,11 @@ class SketchField extends PureComponent {
     super(props)
     this.state = {
       parentWidth: 550,
-      action: true
+      action: true,
     }
   }
 
   _initTools = (fabricCanvas) => {
-
     this._tools = {};
     this._tools[tools.select.id] = new Select(fabricCanvas);
     this._tools[tools.pencil.id] = new Pencil(fabricCanvas);
@@ -92,6 +90,8 @@ class SketchField extends PureComponent {
    * Action when an object is added to the canvas
    */
   _onObjectAdded = (e) => {
+    let canvas = this._fc;
+    console.log(canvas.item)
     if (!this.state.action) {
       this.setState({ action: true });
       return
@@ -156,7 +156,9 @@ class SketchField extends PureComponent {
    */
   _onMouseDown = (e) => {
     if (this.props.tool !== tools.remove.id) {
-      this._selectedTool.doMouseDown(e);
+      this.activeId++;
+      console.log('ActiveID ===>', this.activeId)
+      this._selectedTool.doMouseDown(e, this.activeId);
     } else {
       this.removeSelected();
     }
@@ -183,6 +185,8 @@ class SketchField extends PureComponent {
   };
 
   _onMouseUp = (e) => {
+    console.log('on mouseup ===>', e)
+
     this._selectedTool.doMouseUp(e);
     // Update the final state to new-generated object
     // Ignore Path object since it would be created after mouseUp
@@ -521,6 +525,37 @@ class SketchField extends PureComponent {
     canvas.add(iText);
   };
 
+  getElementbyID = (id) => {
+    return this._fc.getObjects().find(el => el.id === id);
+  }
+
+  setElementbyID = (id) => {
+    let canvas = this._fc;
+    const element = this.getElementbyID(id);
+    canvas.setActiveObject(element);
+  }
+
+  removeElementbyID = (id) => {
+    let canvas = this._fc;
+    const element = this.getElementbyID(id);
+    canvas.remove(element);
+  }
+
+  getSortedElements = () => {
+    let canvas = this._fc;
+    return canvas.getObjects().sort((a, b) => parseFloat(a.id) - parseFloat(b.id));
+  }
+
+
+
+  intractAction (req, callback) {
+    const elements = this.getSortedElements();
+    this.callback = callback;
+    console.log('EDITOR ===> ', req)
+
+    this.callback(elements)
+  }
+
   componentDidMount = () => {
     let {
       tool,
@@ -532,6 +567,8 @@ class SketchField extends PureComponent {
 
     let canvas = this._fc = new fabric.Canvas(this._canvas);
 
+    this.activeId = 0;
+    console.log('@@@@@@@@@@@@@@', this.activeId)
     this._initTools(canvas);
 
     // set initial backgroundColor

@@ -16,11 +16,63 @@ import {
 } from "reactstrap";
 import Editor from 'components/Editor';
 
-
 import './style.scss'
 
 class MainContents extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        cObject: {},
+        items: []
+    }
+  }
+
+  componentDidMount() {
+    this.editor.intractAction(false, this.updateState);
+  }
+
+  dataSaveAction = (e) => {
+    console.log(this.elementId)
+    this.elementId.props= 4;
+    // const actionType = e.target.getAttribute('name');
+    // console.log('Data save ===>', actionType)
+    // this.setState({temp: this.state})
+    // this.temp.cObject.id++;
+    // console.log(this.temp)
+  }
+
+  intractAction = (e) => {
+    let { cObject, items } = this.state;
+    const nextElementId = items.length>0 && items.map((item, index) => {
+      if (item.id === this.cObject.id) {
+        if (e ==='inc') {
+          return (items[(index + 1)] || item).id;
+        } else {
+          return (items[(index - 1)].id || 0);
+        }
+      }
+    })
+    this.editor.intractAction({id: nextElementId, type: e}, this.updateState);
+
+    if (nextElementId>0) {
+      this.editor.intractAction({id: nextElementId, type: e}, this.updateState);
+    } else {
+      this.props.createNotification('error', 'No elements');
+    }
+  }
+
+  updateState(pp) {
+    console.log(pp)
+  }
+
+
   render() {
+    console.log(this.temp)
+    const {
+      cObject: {
+        id: elementId
+      },
+    } = this.state;
     return (
       <>
         <div className="content">
@@ -34,11 +86,12 @@ class MainContents extends React.Component {
                       <CardTitle tag="h2">Detection View</CardTitle>
                     </Col>
                   </Row>
-                </CardHeader>
+                </CardHeader>intractAction
                 <CardBody>
                   <div style={{height:"500px", backgroundColor:'#27293d'}}>
                     <Editor 
                       contents={this.props.contents}
+                      ref={(editor) => { this.editor = editor; }}
                     />
                   </div>
                 </CardBody>
@@ -57,13 +110,14 @@ class MainContents extends React.Component {
                         data-toggle="buttons"
                       >
                         <Button
-                          tag="label"
                           className={"btn-simple"}
                           color="info"
                           id="0"
                           size="sm"
+                          name="save" 
+                          onClick={this.dataSaveAction}
                         >
-                          <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                          <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block" name="save">
                             Save
                           </span>
                         </Button>
@@ -73,9 +127,10 @@ class MainContents extends React.Component {
                           className={"btn-simple"}
                           id="1"
                           size="sm"
-                          tag="label"
+                          name="download"
+                          onClick={this.dataSaveAction}
                         >
-                          <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                          <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block" name="download">
                             Download
                           </span>
                         </Button>
@@ -102,6 +157,8 @@ class MainContents extends React.Component {
                           defaultValue="0"
                           placeholder="0"
                           type="text"
+                          value={elementId}
+                          ref={(input) => { this.elementId = input; }}
                         />
                       </FormGroup>
                       <FormGroup>
@@ -110,22 +167,24 @@ class MainContents extends React.Component {
                           defaultValue="X => 0, Y=> 0"
                           placeholder="X => 0, Y=> 0"
                           type="text"
+                          value={elementId}
+                          ref={(input) => { this.elementPos = input; }}
                         />
                       </FormGroup>
                     </Col>
                     <Col className="pr-md-1" md="4">
                       <FormGroup>
-                        <Button className="btn-fill" color="primary" type="submit">
+                        <Button className="btn-fill" color="primary" type="submit" onClick={e => this.intractAction('inc')}>
                           Increase
                         </Button>
                       </FormGroup>
                       <FormGroup>
-                        <Button className="btn-fill" color="primary" type="submit">
+                        <Button className="btn-fill" color="primary" type="submit" onClick={e => this.intractAction('dec')}>
                           Decrease
                         </Button>
                       </FormGroup>
                       <FormGroup>
-                        <Button className="btn-fill" color="primary" type="submit">
+                        <Button className="btn-fill" color="primary" type="submit" onClick={e => this.intractAction('del')}>
                           Delete
                         </Button>
                       </FormGroup>
@@ -134,7 +193,7 @@ class MainContents extends React.Component {
                 </CardBody>
               </Card>
             </Col>
-            </Row>
+          </Row>
         </div>
       </>
     );

@@ -11,7 +11,9 @@ import { Helmet } from 'react-helmet';
 import Sidebar from 'components/Sidebar';
 import Navebar from 'components/Navebar';
 import MainContents from 'components/MainContents';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 
+import 'react-notifications/lib/notifications.css';
 import './style.scss';
 
 export default class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
@@ -23,6 +25,25 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
   updateTool = (id) => {
     console.log(`${id} item activated`);
     this.props.onSetContents(id, {});
+  }
+
+  createNotification = (type, text) => {
+    switch (type) {
+      case 'info':
+        NotificationManager.info(text);
+        break;
+      case 'success':
+        NotificationManager.success(text, '');
+        break;
+      case 'warning':
+        NotificationManager.warning('text', '', 3000);
+        break;
+      case 'error':
+        NotificationManager.error(text, '', 5000, () => {
+          alert('callback');
+        });
+        break;
+    }
   }
 
   render() {
@@ -55,10 +76,11 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
               />
               <MainContents 
                 contents={contents}
+                createNotification={this.createNotification}
               />
             </div>
           </div>
-    
+          <NotificationContainer />
         </article>
       );
    }

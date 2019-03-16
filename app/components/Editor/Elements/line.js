@@ -16,12 +16,13 @@ class Line extends FabricCanvasTool {
     this._color = props.lineColor;
   }
 
-  doMouseDown(o) {
+  doMouseDown(o, id) {
     this.isDown = true;
     let canvas = this._canvas;
     var pointer = canvas.getPointer(o.e);
     var points = [pointer.x, pointer.y, pointer.x, pointer.y];
     this.line = new fabric.Line(points, {
+      id,
       strokeWidth: this._width,
       fill: this._color,
       stroke: this._color,

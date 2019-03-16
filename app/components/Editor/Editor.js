@@ -40,8 +40,12 @@ class Editor extends React.Component { // eslint-disable-line react/prefer-state
       enableCopyPaste: false,
     };
   }
+  
+  intractAction (req, callback) {
+    this._sketch.intractAction(req, callback);
+  }
 
-   render() {
+  render() {
     const { activeItem } = this.props.contents;
 
     return (

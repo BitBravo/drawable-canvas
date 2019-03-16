@@ -18,13 +18,14 @@ class Rectangle extends FabricCanvasTool {
     this._fill = props.fillColor;
   }
 
-  doMouseDown(o) {
+  doMouseDown(o, id) {
     let canvas = this._canvas;
     this.isDown = true;
     let pointer = canvas.getPointer(o.e);
     this.startX = pointer.x;
     this.startY = pointer.y;
     this.rect = new fabric.Rect({
+      id,
       left: this.startX,
       top: this.startY,
       originX: 'left',

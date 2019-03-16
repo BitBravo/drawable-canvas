@@ -18,7 +18,7 @@ class Circle extends FabricCanvasTool {
     this._fill = props.fillColor;
   }
 
-  doMouseDown(o) {
+  doMouseDown(o, id) {
     let canvas = this._canvas;
     this.isDown = true;
     let pointer = canvas.getPointer(o.e);
