@@ -91,20 +91,20 @@ class SketchField extends PureComponent {
    */
   _onObjectAdded = (e) => {
     let canvas = this._fc;
-    console.log(canvas.item)
     if (!this.state.action) {
       this.setState({ action: true });
       return
     }
     let obj = e.target;
+
     obj.__version = 1;
     // record current object state as json and save as originalState
     let objState = obj.toJSON();
-    console.log(objState)
     obj.__originalState = objState;
     let state = JSON.stringify(objState);
     // object, previous state, current state
     this._history.keep([obj, state, state])
+    this.updateStates(obj);
   };
 
   /**
@@ -130,6 +130,8 @@ class SketchField extends PureComponent {
 
   _onObjectModified = (e) => {
     let obj = e.target;
+    this.updateStates(obj);
+
     obj.__version += 1;
     let prevState = JSON.stringify(obj.__originalState);
     let objState = obj.toJSON();
@@ -156,8 +158,11 @@ class SketchField extends PureComponent {
    */
   _onMouseDown = (e) => {
     if (this.props.tool !== tools.remove.id) {
-      this.activeId++;
+      if (this.props.tool !== tools.select.id) {
+        this.activeId++;
+      }
       console.log('ActiveID ===>', this.activeId)
+      this.updateStates(e.target);
       this._selectedTool.doMouseDown(e, this.activeId);
     } else {
       this.removeSelected();
@@ -175,6 +180,7 @@ class SketchField extends PureComponent {
    * Action when the mouse cursor is moving out from the canvas
    */
   _onMouseOut = (e) => {
+    this.updateStates(e.target);
     this._selectedTool.doMouseOut(e);
     if (this.props.onChange) {
       let onChange = this.props.onChange;
@@ -186,7 +192,7 @@ class SketchField extends PureComponent {
 
   _onMouseUp = (e) => {
     console.log('on mouseup ===>', e)
-
+    this.updateStates(e.target);
     this._selectedTool.doMouseUp(e);
     // Update the final state to new-generated object
     // Ignore Path object since it would be created after mouseUp
@@ -543,17 +549,38 @@ class SketchField extends PureComponent {
 
   getSortedElements = () => {
     let canvas = this._fc;
-    return canvas.getObjects().sort((a, b) => parseFloat(a.id) - parseFloat(b.id));
+    const elements = canvas.getObjects().sort((a, b) => parseFloat(a.id) - parseFloat(b.id));
+    const lastIndex = elements.length - 1;
+    const lastId = lastIndex >= 0? elements[lastIndex].id : 0;
+    return {elements, lastId};
   }
 
-
+  updateStates = (obj) => {
+    if (obj) {
+      let canvas = this._fc;
+      const elements = this.getSortedElements();
+      const activeObject = obj;
+      const states = {...elements, activeObject}
+  
+      if (this.callback && this.initialStates !== states) {
+        console.log('contents updates and call update states')
+        console.log()
+        this.initialStates = states; 
+        this.callback(states)
+      }
+    }
+  }
 
   intractAction (req, callback) {
-    const elements = this.getSortedElements();
-    this.callback = callback;
-    console.log('EDITOR ===> ', req)
-
-    this.callback(elements)
+    if (!this.callback) this.callback = callback;
+    if (req.type ==='del') {
+      if (req.id) this.removeElementbyID(req.id)
+    } else if(req.id) {
+      this.setElementbyID(req.id);
+    } else {
+      console.log('No ElementId, No DeleteAction');
+    }
+    // this.updateStates();
   }
 
   componentDidMount = () => {
@@ -567,8 +594,8 @@ class SketchField extends PureComponent {
 
     let canvas = this._fc = new fabric.Canvas(this._canvas);
 
-    this.activeId = 0;
-    console.log('@@@@@@@@@@@@@@', this.activeId)
+    this.activeId = this.getSortedElements().lastId;
+    console.log('activateid ===>', this.activeId)
     this._initTools(canvas);
 
     // set initial backgroundColor
@@ -638,7 +665,6 @@ class SketchField extends PureComponent {
   };
 
   render = () => {
-    console.log(this.props)
     let {
       className,
       style,

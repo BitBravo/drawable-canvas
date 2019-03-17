@@ -24,6 +24,7 @@ class Circle extends FabricCanvasTool {
     let pointer = canvas.getPointer(o.e);
     [this.startX, this.startY] = [pointer.x, pointer.y];
     this.circle = new fabric.Circle({
+      id,
       left: this.startX, top: this.startY,
       originX: 'left', originY: 'center',
       strokeWidth: this._width,

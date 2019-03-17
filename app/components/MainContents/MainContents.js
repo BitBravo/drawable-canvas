@@ -22,13 +22,19 @@ class MainContents extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        cObject: {},
-        items: []
+      activeObject: {},
+      elements: [],
+      lastId: 0,
     }
   }
 
   componentDidMount() {
     this.editor.intractAction(false, this.updateState);
+    console.log('fwefwfwfwfwfwe')
+  }
+
+  componentWillMount() {
+    console.log('fwefwfwfwfwfwe')
   }
 
   dataSaveAction = (e) => {
@@ -42,13 +48,13 @@ class MainContents extends React.Component {
   }
 
   intractAction = (e) => {
-    let { cObject, items } = this.state;
-    const nextElementId = items.length>0 && items.map((item, index) => {
-      if (item.id === this.cObject.id) {
+    let { activeObject, elements, lastId } = this.state;
+    const nextElementId = elements.length>0 && elements.map((item, index) => {
+      if (item.id === this.state.activeObject.id) {
         if (e ==='inc') {
-          return (items[(index + 1)] || item).id;
+          return (elements[(index + 1)] || item).id;
         } else {
-          return (items[(index - 1)].id || 0);
+          return (elements[(index - 1)].id || 0);
         }
       }
     })
@@ -61,18 +67,15 @@ class MainContents extends React.Component {
     }
   }
 
-  updateState(pp) {
-    console.log(pp)
+  updateState = (states) => {
+    console.log('STATES UPDATED ===>', states);
+    this.setState({...states})
   }
 
 
   render() {
-    console.log(this.temp)
-    const {
-      cObject: {
-        id: elementId
-      },
-    } = this.state;
+    console.log(this.state)
+    const { activeObject } = this.state;
     return (
       <>
         <div className="content">
@@ -154,20 +157,18 @@ class MainContents extends React.Component {
                       <FormGroup>
                         <label>Incremental ID: </label>
                         <Input
-                          defaultValue="0"
                           placeholder="0"
                           type="text"
-                          value={elementId}
+                          value={activeObject.id}
                           ref={(input) => { this.elementId = input; }}
                         />
                       </FormGroup>
                       <FormGroup>
                         <label>Coordinate:</label>
                         <Input
-                          defaultValue="X => 0, Y=> 0"
                           placeholder="X => 0, Y=> 0"
                           type="text"
-                          value={elementId}
+                          value={`X => ${activeObject.x1 || 0}, Y=> ${activeObject.y1 || 0}`}
                           ref={(input) => { this.elementPos = input; }}
                         />
                       </FormGroup>
