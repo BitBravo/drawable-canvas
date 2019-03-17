@@ -191,7 +191,6 @@ class SketchField extends PureComponent {
   };
 
   _onMouseUp = (e) => {
-    console.log('on mouseup ===>', e)
     this.updateStates(e.target);
     this._selectedTool.doMouseUp(e);
     // Update the final state to new-generated object
@@ -538,6 +537,7 @@ class SketchField extends PureComponent {
   setElementbyID = (id) => {
     let canvas = this._fc;
     const element = this.getElementbyID(id);
+    console.log('set element by id , element ===>', id, element)
     canvas.setActiveObject(element);
   }
 
@@ -563,8 +563,6 @@ class SketchField extends PureComponent {
       const states = {...elements, activeObject}
   
       if (this.callback && this.initialStates !== states) {
-        console.log('contents updates and call update states')
-        console.log()
         this.initialStates = states; 
         this.callback(states)
       }
@@ -574,9 +572,14 @@ class SketchField extends PureComponent {
   intractAction (req, callback) {
     if (!this.callback) this.callback = callback;
     if (req.type ==='del') {
-      if (req.id) this.removeElementbyID(req.id)
+
+      console.log(req.id)
+      if (req.id) this.removeElementbyID(req.id[0])
+      // this.setElementbyID(req.id[1])
+      this.updateStates(this.getElementbyID(req.id[1]))
     } else if(req.id) {
       this.setElementbyID(req.id);
+      this.updateStates(this.getElementbyID(req.id))
     } else {
       console.log('No ElementId, No DeleteAction');
     }
@@ -599,7 +602,7 @@ class SketchField extends PureComponent {
     this._initTools(canvas);
 
     // set initial backgroundColor
-    this._backgroundColor('cornsilk')
+    this._backgroundColor('gainsboro')
 
     let selectedTool = this._tools[tool];
     selectedTool.configureCanvas(this.props);

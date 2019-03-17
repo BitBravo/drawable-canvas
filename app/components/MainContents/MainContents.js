@@ -30,11 +30,10 @@ class MainContents extends React.Component {
 
   componentDidMount() {
     this.editor.intractAction(false, this.updateState);
-    console.log('fwefwfwfwfwfwe')
   }
 
   componentWillMount() {
-    console.log('fwefwfwfwfwfwe')
+    // console.log('fwefwfwfwfwfwe')
   }
 
   dataSaveAction = (e) => {
@@ -49,19 +48,17 @@ class MainContents extends React.Component {
 
   intractAction = (e) => {
     let { activeObject, elements, lastId } = this.state;
-    const nextElementId = elements.length>0 && elements.map((item, index) => {
-      if (item.id === this.state.activeObject.id) {
-        if (e ==='inc') {
-          return (elements[(index + 1)] || item).id;
-        } else {
-          return (elements[(index - 1)].id || 0);
-        }
-      }
-    })
-    this.editor.intractAction({id: nextElementId, type: e}, this.updateState);
 
-    if (nextElementId>0) {
-      this.editor.intractAction({id: nextElementId, type: e}, this.updateState);
+    const currentIndex = elements.indexOf(activeObject);
+    if (0 < currentIndex< elements.length) {
+      let nextElementId = 0
+        
+      if (e ==='inc')       nextElementId = elements[(currentIndex+1)]? elements[(currentIndex+1)].id : elements[(currentIndex)].id;
+      else if (e ==='dec')  nextElementId = elements[(currentIndex-1)]? elements[(currentIndex-1)].id : 0;
+      else                  nextElementId = [activeObject.id, (elements[(currentIndex-1)]? elements[(currentIndex-1)].id : 0)];
+
+      console.log('CurrentId, NextItem Id, Elements ===> ', activeObject.id, nextElementId, elements)
+      this.editor.intractAction({id: nextElementId, type: e}, this.updateState); 
     } else {
       this.props.createNotification('error', 'No elements');
     }
@@ -74,8 +71,7 @@ class MainContents extends React.Component {
 
 
   render() {
-    console.log(this.state)
-    const { activeObject } = this.state;
+    const { activeObject, elements } = this.state;
     return (
       <>
         <div className="content">
@@ -89,9 +85,9 @@ class MainContents extends React.Component {
                       <CardTitle tag="h2">Detection View</CardTitle>
                     </Col>
                   </Row>
-                </CardHeader>intractAction
+                </CardHeader>
                 <CardBody>
-                  <div style={{height:"500px", backgroundColor:'#27293d'}}>
+                  <div style={{height:"500px", backgroundColor:'#27293d'}} className="editor-area">
                     <Editor 
                       contents={this.props.contents}
                       ref={(editor) => { this.editor = editor; }}
@@ -142,7 +138,8 @@ class MainContents extends React.Component {
                   </Row>
                 </CardHeader>
                 <CardBody>
-                  <div style={{height:"500px", backgroundColor:'#27293d'}}>
+                  <div style={{height:"500px", backgroundColor:'#27293d'}} className="result-view" contentEditable>
+                  {"JSON.stringify(elements)"}
                   </div>
                 </CardBody>
               </Card>
@@ -159,7 +156,7 @@ class MainContents extends React.Component {
                         <Input
                           placeholder="0"
                           type="text"
-                          value={activeObject.id}
+                          defaultValue={activeObject.id}
                           ref={(input) => { this.elementId = input; }}
                         />
                       </FormGroup>
@@ -168,7 +165,7 @@ class MainContents extends React.Component {
                         <Input
                           placeholder="X => 0, Y=> 0"
                           type="text"
-                          value={`X => ${activeObject.x1 || 0}, Y=> ${activeObject.y1 || 0}`}
+                          defaultValue={`X => ${activeObject.x1 || 0}, Y=> ${activeObject.y1 || 0}`}
                           ref={(input) => { this.elementPos = input; }}
                         />
                       </FormGroup>

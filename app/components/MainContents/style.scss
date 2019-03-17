@@ -5,6 +5,17 @@
       font-size: 12px;
     }
   }
+  .result-view {
+    background-color: gainsboro !important;
+    overflow-y: auto;
+    padding: 8px;
+    color: black; 
+    font-size: 15px;
+  }
+
+  .editor-area {
+    background-color: gainsboro !important;
+  }
 
   .main-control-board {
     .form-group {
