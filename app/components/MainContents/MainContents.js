@@ -138,7 +138,11 @@ class MainContents extends React.Component {
                   </Row>
                 </CardHeader>
                 <CardBody>
-                  <div style={{height:"500px", backgroundColor:'#27293d'}} className="result-view" contentEditable>
+                  <div 
+                    style={{height:"500px", backgroundColor:'#27293d'}} 
+                    className="result-view" contentEditable 
+                    suppressContentEditableWarning={true}
+                  >
                   {"JSON.stringify(elements)"}
                   </div>
                 </CardBody>

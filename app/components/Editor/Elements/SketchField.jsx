@@ -10,10 +10,22 @@ import Line from './line';
 import Rectangle from './rectangle';
 import Circle from './circle';
 import {tools} from 'constants/tools'
+import {useDropzone} from 'react-dropzone'
+
 
 // const fabric = require('fabric').fabric;
 const fabric = window.fabric
 
+function MyDropzone() {
+  const {getRootProps, getInputProps} = useDropzone()
+
+  return (
+    <div {...getRootProps()}>
+      <input {...getInputProps()} />
+      <p>Drag 'n' drop some files here, or click to select files</p>
+    </div>
+  )
+}
 
 /**
  * Sketch Tool based on FabricJS for React Applications
@@ -212,6 +224,50 @@ class SketchField extends PureComponent {
     }
   };
 
+  onDrop = (evt) => {
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    var files = evt.dataTransfer.files; // FileList object.
+
+    let canvas = this._fc;
+
+    var reader = new FileReader();
+    reader.onload = function (f) {
+      var data = f.target.result;                    
+      fabric.Image.fromURL(data, function (img) {
+        const scales = {
+          x: (canvas.getWidth() / img.width),
+          y: (canvas.getHeight() / img.height)
+        }
+        console.log(scales)
+        var oImg = img.set({
+          left: 0, 
+          top: 0, 
+          angle: 0,
+          width:300, 
+          height:300,
+          scaleX: 1.7,
+          scaleY: 1.8,
+        });
+        canvas.add(oImg).renderAll();
+        var a = canvas.setActiveObject(oImg);
+        var dataURL = canvas.toDataURL({format: 'png', quality: 0.8});
+      });
+    };
+
+    reader.readAsDataURL(files[0]);
+
+  }
+
+  onDrag = (evt) => {
+    evt.stopPropagation();
+    evt.preventDefault();
+    evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+  }
+
+  // Setup the dnd listeners.
+ 
   /**
    * Track the resize of the window and update our state
    *
@@ -683,7 +739,10 @@ class SketchField extends PureComponent {
       <div
         className={className}
         ref={(c) => this._container = c}
-        style={canvasDivStyle}>
+        style={canvasDivStyle}
+        onDragOver = {this.onDrag}
+        onDrop = {this.onDrop}
+      >             
         <canvas id={uuid4()} ref={(c) => this._canvas = c}>
         </canvas>
       </div>
