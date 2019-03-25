@@ -7,7 +7,7 @@ import injectSaga from 'utils/injectSaga';
 import { makeSelectCurrentUser, makeSelectAuthentication } from '../App/selectors';
 import { getUser, logOut } from '../App/actions';
 
-import { makeSetContents, makeSetLoading } from './selectors';
+import { makeSetContents, makeSetLoading, makeSetMsg } from './selectors';
 import { saveContents, getContents, setContents } from './actions';
 
 import reducer from './reducer';
@@ -26,7 +26,8 @@ const mapStateToProps = createStructuredSelector({
   currentuser: makeSelectCurrentUser(),
   authentication: makeSelectAuthentication(),
   contents: makeSetContents(),
-  loading: makeSetLoading()
+  loading: makeSetLoading(),
+  notification: makeSetMsg(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

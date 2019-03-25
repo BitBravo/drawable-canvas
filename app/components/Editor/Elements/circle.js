@@ -21,8 +21,13 @@ class Circle extends FabricCanvasTool {
   doMouseDown(o, id) {
     let canvas = this._canvas;
     this.isDown = true;
-    let pointer = canvas.getPointer(o.e);
-    [this.startX, this.startY] = [pointer.x, pointer.y];
+    if (o.e) {
+      let pointer = canvas.getPointer(o.e);
+      [this.startX, this.startY] = [pointer.x, pointer.y];
+    } else {
+      [this.startX, this.startY] = o;
+    }
+
     this.circle = new fabric.Circle({
       id,
       left: this.startX, top: this.startY,
@@ -39,14 +44,14 @@ class Circle extends FabricCanvasTool {
 
   doMouseMove(o) {
     if (!this.isDown) return;
-    let canvas = this._canvas;
-    let pointer = canvas.getPointer(o.e);
-    this.circle.set({
-      radius: linearDistance({ x: this.startX, y: this.startY }, { x: pointer.x, y: pointer.y }) / 2,
-      angle: Math.atan2(pointer.y - this.startY, pointer.x - this.startX) * 180 / Math.PI
-    });
-    this.circle.setCoords();
-    canvas.renderAll();
+    // let canvas = this._canvas;
+    // let pointer = canvas.getPointer(o.e);
+    // this.circle.set({
+    //   radius: linearDistance({ x: this.startX, y: this.startY }, { x: pointer.x, y: pointer.y }) / 2,
+    //   angle: Math.atan2(pointer.y - this.startY, pointer.x - this.startX) * 180 / Math.PI
+    // });
+    // this.circle.setCoords();
+    // canvas.renderAll();
   }
 
   doMouseUp(o) {

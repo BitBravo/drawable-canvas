@@ -2,7 +2,6 @@ import {
   call, put, select, takeLatest
 } from 'redux-saga/effects';
 import request from 'utils/request';
-import { makeSelectUsername } from 'containers/HomePage/selectors';
 
 import { GET_USER_REQUEST } from 'containers/App/constants';
 import { getUserDone, getUserError } from 'containers/App/actions';
@@ -19,9 +18,6 @@ import {
 } from 'containers/HomePage/actions';
 
 export function* getUser() {
-  // Using store value in saga
-  // const username = yield select(makeSelectUsername());   
-  const requestURL = `https:\\loalhost:3000`;
 
   try {
     // Call our request helper (see 'utils/request')
@@ -33,8 +29,6 @@ export function* getUser() {
 }
 
 export function* getContents() {
-  const requestURL = `https:\\loalhost:3000`;
-
   try {
     yield put(getContentsDone({contents: 'get contents action request'}));
   } catch (err) {
@@ -42,12 +36,11 @@ export function* getContents() {
   }
 }
 
-export function* saveContents() {
-  // const username = yield select(makeSelectUsername());
-  const requestURL = `https:\\loalhost:3000`;
-
+export function* saveContents(e) {
+  const requestURL = 'save';
+  const response = yield call(request, requestURL, {type: 'POST', data: e.data});
   try {
-    yield put(saveContentsDone({contents: {data:'save contenst data request'}}));
+    yield put(saveContentsDone(response));
   } catch (err) {
     yield put(saveContentsError(err));
   }

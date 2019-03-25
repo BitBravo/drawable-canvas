@@ -1,12 +1,13 @@
 /*eslint no-unused-vars: 0*/
 
-import React, {PureComponent} from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import History from './history';
 import {uuid4} from './utils';
 import Select from './select';
 import Pencil from './pencil';
 import Line from './line';
+import Pan from './pan';
 import Rectangle from './rectangle';
 import Circle from './circle';
 import {tools} from 'constants/tools'
@@ -30,13 +31,14 @@ function MyDropzone() {
 /**
  * Sketch Tool based on FabricJS for React Applications
  */
-class SketchField extends PureComponent {
+class SketchField extends Component {
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       parentWidth: 550,
       action: true,
+      imagefile: false
     }
   }
 
@@ -47,6 +49,7 @@ class SketchField extends PureComponent {
     this._tools[tools.line.id] = new Line(fabricCanvas);
     this._tools[tools.rectangle.id] = new Rectangle(fabricCanvas);
     this._tools[tools.circle.id] = new Circle(fabricCanvas);
+    this._tools[tools.pan.id] = new Pan(fabricCanvas);
   }
 
   /**
@@ -107,17 +110,43 @@ class SketchField extends PureComponent {
       this.setState({ action: true });
       return
     }
-    let obj = e.target;
 
-    obj.__version = 1;
-    // record current object state as json and save as originalState
-    let objState = obj.toJSON();
-    obj.__originalState = objState;
-    let state = JSON.stringify(objState);
-    // object, previous state, current state
-    this._history.keep([obj, state, state])
-    this.updateStates(obj);
+    if (e.target.id.toString().includes('line') !== true) {
+
+      let obj = e.target;
+      this.allPoints? '' : this.allPoints = [] ;
+      this.allPoints.push({id: this.activeId, pos: [parseInt(obj.left), parseInt(obj.top)]})
+
+  
+      obj.__version = 1;
+      // record current object state as json and save as originalState
+      let objState = obj.toJSON();
+      obj.__originalState = objState;
+      let state = JSON.stringify(objState);
+      // object, previous state, current state
+      this._history.keep([obj, state, state])
+      this.updateStates(this.activeId, this.allPoints);
+    }
   };
+
+  _drawLine = (posId) => {
+    const canvas = this._fc;
+    if (posId > 1) {
+      const pos2 = this.getElementbyID(posId);
+      const pos1 = this.getElementbyID((posId-1));
+      let path = [ pos1.left, pos1.top, pos2.left, pos2.top];
+      path = path.map((x, index) => index%2? (parseInt(x, 10)-1): (parseInt(x, 10)+2));
+
+      canvas.add(new fabric.Line(path, {
+        id: `${this.activeId}-line`,
+        stroke: 'black',
+        strokeWidth: 2,
+        selectable: false,
+      }))
+
+      canvas.renderAll();
+    }
+  }
 
   /**
    * Action when an object is moving around inside the canvas
@@ -142,7 +171,7 @@ class SketchField extends PureComponent {
 
   _onObjectModified = (e) => {
     let obj = e.target;
-    this.updateStates(obj);
+    // this.updateStates(obj);
 
     obj.__version += 1;
     let prevState = JSON.stringify(obj.__originalState);
@@ -168,14 +197,17 @@ class SketchField extends PureComponent {
   /**
    * Action when the mouse button is pressed down
    */
-  _onMouseDown = (e) => {
+  _onMouseDown = (e, id) => {
+    
     if (this.props.tool !== tools.remove.id) {
-      if (this.props.tool !== tools.select.id) {
-        this.activeId++;
-      }
-      console.log('ActiveID ===>', this.activeId)
-      this.updateStates(e.target);
+      // if (this.props.tool !== tools.select.id) {
+      if(e.e) this.activeId++;
+      else this.activeId = id;
+      // }
+
+      // this.updateStates(e.target);
       this._selectedTool.doMouseDown(e, this.activeId);
+      this._drawLine(this.activeId);
     } else {
       this.removeSelected();
     }
@@ -185,14 +217,21 @@ class SketchField extends PureComponent {
    * Action when the mouse cursor is moving around within the canvas
    */
   _onMouseMove = (e) => {
+    const canvas = this._fc;
+    var pointer = canvas.getPointer(e.e);
+    var posx = pointer.x.toFixed(0);
+    var posy = pointer.y.toFixed(0);
+
+    // console.log(posx+", "+posy); 
     this._selectedTool.doMouseMove(e);
+    this.updateStates(null, null, [posx, posy])
   };
 
   /**
    * Action when the mouse cursor is moving out from the canvas
    */
   _onMouseOut = (e) => {
-    this.updateStates(e.target);
+    // this.updateStates(e.target);
     this._selectedTool.doMouseOut(e);
     if (this.props.onChange) {
       let onChange = this.props.onChange;
@@ -203,7 +242,10 @@ class SketchField extends PureComponent {
   };
 
   _onMouseUp = (e) => {
-    this.updateStates(e.target);
+    // document.getElementById('fileimport').click();
+    // console.log(document.getElementById('fileimport'))
+   
+    // this.updateStates(e.target);
     this._selectedTool.doMouseUp(e);
     // Update the final state to new-generated object
     // Ignore Path object since it would be created after mouseUp
@@ -220,44 +262,70 @@ class SketchField extends PureComponent {
       let onChange = this.props.onChange;
       setTimeout(() => {
         onChange(e.e)
-      }, 10)
+      }, 100)
     }
   };
+  
+  fileupload = () => {
+    let input = document.getElementById('fileupload');
+    input.click();
+  }
 
   onDrop = (evt) => {
     evt.stopPropagation();
     evt.preventDefault();
 
-    var files = evt.dataTransfer.files; // FileList object.
+    var files = evt.dataTransfer? evt.dataTransfer.files : evt.target.files; // FileList object.
+    if (files) {
+      this.setState({
+        imagefile: files[0]
+      }, this.addImages(files[0]))
+    }
+  }
 
+  addImages = (file) => {
     let canvas = this._fc;
 
     var reader = new FileReader();
-    reader.onload = function (f) {
-      var data = f.target.result;                    
-      fabric.Image.fromURL(data, function (img) {
-        const scales = {
-          x: (canvas.getWidth() / img.width),
-          y: (canvas.getHeight() / img.height)
-        }
-        console.log(scales)
-        var oImg = img.set({
-          left: 0, 
-          top: 0, 
-          angle: 0,
-          width:300, 
-          height:300,
-          scaleX: 1.7,
-          scaleY: 1.8,
-        });
-        canvas.add(oImg).renderAll();
-        var a = canvas.setActiveObject(oImg);
-        var dataURL = canvas.toDataURL({format: 'png', quality: 0.8});
-      });
+    reader.onload = function(f) {
+       var data = f.target.result;
+       fabric.Image.fromURL(data, function(img) {
+          canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+              top: 0,
+              left:0,
+             scaleX: (canvas.width+2) / img.width,
+             scaleY: canvas.height / img.height
+          });
+       });
     };
 
-    reader.readAsDataURL(files[0]);
+    reader.readAsDataURL(file);
 
+    // var reader = new FileReader();
+    // reader.onload = function (f) {
+    //   var data = f.target.result;                    
+    //   fabric.Image.fromURL(data, function (img) {
+    //     const scales = {
+    //       x: (canvas.getWidth() / img.width),
+    //       y: (canvas.getHeight() / img.height)
+    //     }
+    //     console.log(scales, canvas.attributes, canvas.getHeight(),img.width, img.height )
+    //     var oImg = img.set({
+    //       left: 0, 
+    //       top: 0, 
+    //       // angle: 0,
+    //       // width:300, 
+    //       // height:300,
+    //       scaleX: scales.x,
+    //       scaleY: scales.x,
+    //     });
+    //     canvas.add(oImg).renderAll();
+    //     var a = canvas.setActiveObject(oImg);
+    //     var dataURL = canvas.toDataURL({format: 'png', quality: 0.8});
+    //   });
+    // };
+
+    // reader.readAsDataURL(files);
   }
 
   onDrag = (evt) => {
@@ -593,7 +661,6 @@ class SketchField extends PureComponent {
   setElementbyID = (id) => {
     let canvas = this._fc;
     const element = this.getElementbyID(id);
-    console.log('set element by id , element ===>', id, element)
     canvas.setActiveObject(element);
   }
 
@@ -611,12 +678,13 @@ class SketchField extends PureComponent {
     return {elements, lastId};
   }
 
-  updateStates = (obj) => {
-    if (obj) {
-      let canvas = this._fc;
-      const elements = this.getSortedElements();
-      const activeObject = obj;
-      const states = {...elements, activeObject}
+  updateStates = (obj, points, pos) => {
+
+    if (obj || pos) {
+      // let canvas = this._fc;
+      // const elements = this.getSortedElements();
+      // const activeObject = obj;
+      const states = {id: obj, elements: points, pos}
   
       if (this.callback && this.initialStates !== states) {
         this.initialStates = states; 
@@ -625,17 +693,37 @@ class SketchField extends PureComponent {
     }
   }
 
+  dataSaveAction = (req) => {
+   if (req.length > 0) {
+      req.map(point => {
+        this._onMouseDown(point.pos, point.id)
+      })
+    }
+  }
+  
   intractAction (req, callback) {
     if (!this.callback) this.callback = callback;
     if (req.type ==='del') {
 
-      console.log(req.id)
-      if (req.id) this.removeElementbyID(req.id[0])
+      if (req.id) {
+        this.allPoints = this.allPoints.filter(function(item) {
+          return item.id !== req.id;
+        })
+
+        this.removeElementbyID(req.id)
+        this.removeElementbyID(`${req.id}-line`) 
+        const lastItemId = this.allPoints.length>0 ? 
+            this.allPoints[(this.allPoints.length - 1)].id
+          : 
+            (()=>{
+              this.activeId = 0;
+            })();
+        this.updateStates(lastItemId, this.allPoints)
+      }
       // this.setElementbyID(req.id[1])
-      this.updateStates(this.getElementbyID(req.id[1]))
     } else if(req.id) {
       this.setElementbyID(req.id);
-      this.updateStates(this.getElementbyID(req.id))
+      // this.updateStates(this.getElementbyID(req.id))
     } else {
       console.log('No ElementId, No DeleteAction');
     }
@@ -654,13 +742,13 @@ class SketchField extends PureComponent {
     let canvas = this._fc = new fabric.Canvas(this._canvas);
 
     this.activeId = this.getSortedElements().lastId;
-    console.log('activateid ===>', this.activeId)
     this._initTools(canvas);
 
     // set initial backgroundColor
     this._backgroundColor('gainsboro')
 
-    let selectedTool = this._tools[tool];
+    // let selectedTool = this._tools[tool];
+    let selectedTool = this._tools['circle'];
     selectedTool.configureCanvas(this.props);
     this._selectedTool = selectedTool;
 
@@ -712,6 +800,8 @@ class SketchField extends PureComponent {
 
     //Bring the cursor back to default if it is changed by a tool
     this._fc.defaultCursor = 'default';
+
+
     this._selectedTool.configureCanvas(this.props);
 
     if (this.props.backgroundColor !== prevProps.backgroundColor) {
@@ -731,20 +821,32 @@ class SketchField extends PureComponent {
       height
     } = this.props;
 
-    let canvasDivStyle = Object.assign({}, style ? style : {},
-      width ? { width: width } : {},
-      height ? { height: height } : { height: 512 });
+    // let canvasDivStyle = Object.assign({}, style ? style : {},
+    //   width ? { width: width } : {},
+    //   height ? { height: height } : { height: 512 });
+    //   console.log('render function')
 
     return (
       <div
         className={className}
         ref={(c) => this._container = c}
-        style={canvasDivStyle}
-        onDragOver = {this.onDrag}
-        onDrop = {this.onDrop}
-      >             
-        <canvas id={uuid4()} ref={(c) => this._canvas = c}>
-        </canvas>
+        // style={canvasDivStyle}
+      >  
+      <canvas id={uuid4()} className="draw-canvas" ref={(c) => this._canvas = c} style={{border:"3px solid #000"}}></canvas>
+      
+      { this.state.imagefile ?
+       ''
+        :
+        <div 
+          className='empty-area'
+          onDragOver = {this.onDrag}
+          onDrop = {this.onDrop}  
+          onClick= {this.fileupload} 
+        >
+          <span>No Image</span>
+          <input type='file' id='fileupload' onChange={this.onDrop} style={{display:'none'}}/>
+        </div>
+      }
       </div>
     )
   }
@@ -752,8 +854,8 @@ class SketchField extends PureComponent {
 
 SketchField.defaultProps = {
   lineColor: 'black',
-  lineWidth: 2,
-  fillColor: 'transparent',
+  lineWidth: 3,
+  fillColor: 'black',
   backgroundColor: 'transparent',
   opacity: 1.0,
   undoSteps: 25,

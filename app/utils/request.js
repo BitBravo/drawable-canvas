@@ -40,7 +40,14 @@ function checkStatus(response) {
  * @return {object}           The response data
  */
 export default function request(url, options) {
-  return fetch(url, options)
-    .then(checkStatus)
-    .then(parseJSON);
+  return fetch(url, {
+      method: options.type,  
+      body: JSON.stringify(options.data),  
+      headers:{
+        'Content-Type': 'application/json'
+       }
+    })
+    .then(res => res.json())
+    .then(response => ({status: 200, msg: response.msg, data: response.data}))
+    .catch(error => ({status: 200, msg: response.msg}));
 }

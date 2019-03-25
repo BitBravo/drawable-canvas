@@ -21,10 +21,12 @@ import './style.scss'
 class MainContents extends React.Component {
   constructor(props) {
     super(props);
+    this.elements = [],
     this.state = {
-      activeObject: {},
+      activeObjectId: 0,
       elements: [],
       lastId: 0,
+      pos: [0 ,0]
     }
   }
 
@@ -33,12 +35,16 @@ class MainContents extends React.Component {
   }
 
   componentWillMount() {
-    // console.log('fwefwfwfwfwfwe')
+
   }
 
   dataSaveAction = (e) => {
-    console.log(this.elementId)
-    this.elementId.props= 4;
+    if (e === 'save') {
+      this.props.onSaveContents(this.elements)
+    } else {
+      this.editor.dataSaveAction(JSON.parse(this.resultElements.innerText)); 
+    }
+    // this.elementId.props= 4;
     // const actionType = e.target.getAttribute('name');
     // console.log('Data save ===>', actionType)
     // this.setState({temp: this.state})
@@ -47,31 +53,29 @@ class MainContents extends React.Component {
   }
 
   intractAction = (e) => {
-    let { activeObject, elements, lastId } = this.state;
+    let { activeObjectId, elements, lastId } = this.state;
+    let currentIndex = this.elements.findIndex(element => element.id === activeObjectId)
 
-    const currentIndex = elements.indexOf(activeObject);
-    if (0 < currentIndex< elements.length) {
-      let nextElementId = 0
-        
-      if (e ==='inc')       nextElementId = elements[(currentIndex+1)]? elements[(currentIndex+1)].id : elements[(currentIndex)].id;
-      else if (e ==='dec')  nextElementId = elements[(currentIndex-1)]? elements[(currentIndex-1)].id : 0;
-      else                  nextElementId = [activeObject.id, (elements[(currentIndex-1)]? elements[(currentIndex-1)].id : 0)];
-
-      console.log('CurrentId, NextItem Id, Elements ===> ', activeObject.id, nextElementId, elements)
-      this.editor.intractAction({id: nextElementId, type: e}, this.updateState); 
+    if (e === 'inc') {
+      currentIndex = currentIndex + 1;
+    } else if (e==='dec') {
+      currentIndex = currentIndex - 1;
     } else {
-      this.props.createNotification('error', 'No elements');
+      this.editor.intractAction({id: activeObjectId, type: e}, this.updateState); 
     }
+    this.elements[currentIndex]? this.setState({activeObjectId: this.elements[currentIndex].id}) : '';
   }
 
   updateState = (states) => {
-    console.log('STATES UPDATED ===>', states);
-    this.setState({...states})
+    states.id? this.setState({activeObjectId: states.id}): '';
+    states.pos? this.setState({pos: states.pos}): '';
+    if (states.elements) { this.elements = states.elements }
   }
 
 
   render() {
-    const { activeObject, elements } = this.state;
+    const { activeObjectId, elements, pos } = this.state;
+
     return (
       <>
         <div className="content">
@@ -97,24 +101,26 @@ class MainContents extends React.Component {
               </Card>
             </Col>
             <Col md="4">
-            <Card className="card-chart">
+              <Card className="card-chart">
                 <CardHeader>
                   <Row>
-                    <Col className="text-left" sm="6">
+                    {/* <Col className="" sm="4">
                       <CardTitle tag="h2">Result</CardTitle>
                     </Col>
-                    <Col sm="6">
+                    {/* <button>fwefwef</button>
+                    <button>fwefwef</button> */}
+                    <Col sm="7">
                       <ButtonGroup
                         className="btn-group-toggle float-right preview-action-bar"
                         data-toggle="buttons"
-                      >
+                      > 
                         <Button
                           className={"btn-simple"}
                           color="info"
                           id="0"
                           size="sm"
                           name="save" 
-                          onClick={this.dataSaveAction}
+                          onClick={e => this.dataSaveAction('save')}
                         >
                           <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block" name="save">
                             Save
@@ -126,11 +132,11 @@ class MainContents extends React.Component {
                           className={"btn-simple"}
                           id="1"
                           size="sm"
-                          name="download"
-                          onClick={this.dataSaveAction}
+                          name="load"
+                          onClick={e => this.dataSaveAction('load')}
                         >
                           <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block" name="download">
-                            Download
+                            Load
                           </span>
                         </Button>
                       </ButtonGroup>
@@ -142,8 +148,10 @@ class MainContents extends React.Component {
                     style={{height:"500px", backgroundColor:'#27293d'}} 
                     className="result-view" contentEditable 
                     suppressContentEditableWarning={true}
+                    contentEditable
+                    ref={(input) => { this.resultElements = input; }}
                   >
-                  {"JSON.stringify(elements)"}
+                  {JSON.stringify(this.elements)}
                   </div>
                 </CardBody>
               </Card>
@@ -160,7 +168,7 @@ class MainContents extends React.Component {
                         <Input
                           placeholder="0"
                           type="text"
-                          defaultValue={activeObject.id}
+                          value={activeObjectId}
                           ref={(input) => { this.elementId = input; }}
                         />
                       </FormGroup>
@@ -169,7 +177,7 @@ class MainContents extends React.Component {
                         <Input
                           placeholder="X => 0, Y=> 0"
                           type="text"
-                          defaultValue={`X => ${activeObject.x1 || 0}, Y=> ${activeObject.y1 || 0}`}
+                          value={`X => ${pos[0]}, Y => ${pos[1]}`}
                           ref={(input) => { this.elementPos = input; }}
                         />
                       </FormGroup>

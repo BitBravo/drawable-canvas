@@ -25,6 +25,7 @@ import {
 const initialState = fromJS({
   loading: true,
   error: false,
+  notification: '',
   contents: {
     activeItem: 'select',
     itemData: {}
@@ -53,6 +54,7 @@ function homeReducer(state = initialState, action) {
         .set('error', false);
     case SAVE_CONTENTS_SUCCESS:
       return state
+        .set('notification', action.response)
         .set('loading', false)
         .set('error', false);
     case SAVE_CONTENTS_ERROR:

@@ -16,8 +16,14 @@ const makeSetLoading = () => createSelector(
   (homeState) => homeState.get('loading')
 );
 
+const makeSetMsg = () => createSelector(
+  selectHome,
+  (homeState) => homeState.get('notification')
+);
+
 export {
   selectHome,
   makeSetContents,
   makeSetLoading,
+  makeSetMsg,
 };

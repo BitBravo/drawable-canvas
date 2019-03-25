@@ -45,6 +45,10 @@ class Editor extends React.Component { // eslint-disable-line react/prefer-state
     this._sketch.intractAction(req, callback);
   }
 
+  dataSaveAction (req) {
+    this._sketch.dataSaveAction(req);
+  }
+  
   render() {
     const { activeItem } = this.props.contents;
 

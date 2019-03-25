@@ -9,6 +9,11 @@ export const tools = {
     name: "Pencil",
     img: require('images/pencle.png'),
   },
+  pan: {
+    id: "pan",
+    name: "Pan",
+    img: require('images/pencle.png'),
+  },
   circle: {
     id: "circle",
     name: "Circle",

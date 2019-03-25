@@ -17,9 +17,23 @@ import 'react-notifications/lib/notifications.css';
 import './style.scss';
 
 export default class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
-
+  constructor(props) {
+    super(props);
+    this.elements = {}
+  }
   componentDidMount() {
     const { loginUser, onSaveContents } = this.props;
+  }
+
+  componentWillReceiveProps(nextprops) {
+    if(nextprops.notification !== this.elements) {
+      this.elements = nextprops.notification;
+      if(nextprops.notification.status === 200) {
+        this.createNotification('success', nextprops.notification.msg);
+      } else {
+        this.createNotification('error', nextprops.notification.msg);
+      }
+    }
   }
 
   updateTool = (id) => {
@@ -60,10 +74,10 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
           </Helmet>
         
           <div className="wrapper">
-            <Sidebar
+            {/* <Sidebar
               {...this.props}
               onUpdateTool={this.updateTool}
-            />
+            /> */}
 
             <div
               className="main-panel"
@@ -77,6 +91,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
               <MainContents 
                 contents={contents}
                 createNotification={this.createNotification}
+                onSaveContents={this.props.onSaveContents}
               />
             </div>
           </div>
